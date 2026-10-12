@@ -10,7 +10,7 @@ class TodoItem {
     required this.title,
     this.memo = "",
     required this.date,
-    required this.isCompleted,
+    this.isCompleted = false,
   });
 
   TodoItem copyWith({
