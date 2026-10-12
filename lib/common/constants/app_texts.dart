@@ -13,4 +13,22 @@ class AppTexts {
 
   static const todoSave = '保存';
   static const titleError = 'タイトルが入力されていません';
+
+  static const emptyTitle = 'Todoはまだありません';
+  static const emptyMessage = ' ボタンからTodoを新規作成しよう！';
+
+  // 進捗ヘッダー
+  static String remaining(int count) => count == 0 ? 'すべて完了！' : 'のこり $count 件';
+  static String progress(int done, int total) => '$done / $total 完了';
+
+  // 削除確認ダイアログ
+  static const deleteConfirmTitle = 'Todoを削除しますか？';
+  static String deleteConfirmMessage(String title) =>
+      '「$title」を削除します。\nこの操作は取り消せません。';
+  static const cancel = 'キャンセル';
+  static const delete = '削除';
+
+  // エラー
+  static const errorTitle = 'エラーが発生しました';
+  static const retry = '再読み込み';
 }

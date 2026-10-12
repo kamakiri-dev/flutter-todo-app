@@ -6,7 +6,7 @@ import 'package:todo_app/features/todo/view/todo_home_page.dart';
 final appRouter = GoRouter(
   initialLocation: '/',
   routes: [
-    GoRoute(path: '/', builder: (context, state) => TodoHomePage()),
+    GoRoute(path: '/', builder: (context, state) => const TodoHomePage()),
     GoRoute(
       path: '/edit',
       builder: (context, state) {
