@@ -3,8 +3,7 @@ import 'package:sqflite/sqflite.dart';
 
 class TodoDatabase {
   static const _databaseName = 'todo.db';
-  // v2: description列をmemo列に変更
-  static const _databaseVersion = 2;
+  static const _databaseVersion = 1;
   static const _tableName = 'todos';
 
   Database? _database;
@@ -24,13 +23,6 @@ class TodoDatabase {
       version: _databaseVersion,
       onCreate: (db, version) async {
         await _createTable(db);
-      },
-      onUpgrade: (db, oldVersion, newVersion) async {
-        // v1はmemo列が無くinsertできなかったため、データは無い前提で作り直す
-        if (oldVersion < 2) {
-          await db.execute('DROP TABLE IF EXISTS $_tableName');
-          await _createTable(db);
-        }
       },
     );
 

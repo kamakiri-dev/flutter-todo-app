@@ -30,5 +30,6 @@ class AppTexts {
 
   // エラー
   static const errorTitle = 'エラーが発生しました';
-  static const retry = '再読み込み';
+  static const errorMessage = 'もう一度お試しください。';
+  static const ok = 'OK';
 }

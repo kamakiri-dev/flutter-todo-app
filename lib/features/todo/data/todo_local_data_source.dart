@@ -10,7 +10,7 @@ class TodoLocalDataSource {
 
   Future<List<TodoItem>> getTodos() async {
     final db = await database.database;
-    // 期限が近い順。同じ期限なら作成順
+    // 期限（日時）が近い順。同じ日時なら作成順
     // date は ISO8601 文字列なので文字列比較でも日付順になる
     final data = await db.query('todos', orderBy: 'date ASC, id ASC');
 
@@ -33,6 +33,16 @@ class TodoLocalDataSource {
 
     // todosテーブルの中からidがtodo.idと一致する行を更新
     await db.update('todos', data, where: 'id = ?', whereArgs: [todo.id]);
+  }
+
+  Future<void> toggleTodo(int id) async {
+    final db = await database.database;
+
+    // 完了状態(0/1)をDB上で反転
+    await db.rawUpdate(
+      'UPDATE todos SET is_completed = 1 - is_completed WHERE id = ?',
+      [id],
+    );
   }
 
   Future<void> deleteTodo(int id) async {

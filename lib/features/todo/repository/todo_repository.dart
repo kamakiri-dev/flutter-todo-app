@@ -18,6 +18,10 @@ class TodoRepository {
     return localDataSource.updateTodo(todo);
   }
 
+  Future<void> toggleTodo(int id) {
+    return localDataSource.toggleTodo(id);
+  }
+
   Future<void> deleteTodo(int id) {
     return localDataSource.deleteTodo(id);
   }

@@ -6,6 +6,7 @@ import 'package:todo_app/features/todo/bloc/todo_bloc.dart';
 import 'package:todo_app/features/todo/bloc/todo_event.dart';
 import 'package:todo_app/features/todo/bloc/todo_state.dart';
 import 'package:todo_app/features/todo/view/widget/todo_empty_view.dart';
+import 'package:todo_app/features/todo/view/widget/todo_error_dialog.dart';
 import 'package:todo_app/features/todo/view/widget/todo_item_card.dart';
 import 'package:todo_app/features/todo/view/widget/todo_summary_header.dart';
 
@@ -20,25 +21,19 @@ class TodoHomePage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(title: const Text(AppTexts.todoList)),
       body: BlocConsumer<TodoBloc, TodoState>(
-        // 保存・削除などに失敗したら SnackBar で知らせる
-        listener: (context, state) {
+        // 失敗したらエラーダイアログを出し、閉じたら一覧を読み込み直す
+        listener: (context, state) async {
           if (state is TodoFailure) {
-            final colorScheme = Theme.of(context).colorScheme;
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(AppTexts.errorTitle),
-                backgroundColor: colorScheme.error,
-              ),
-            );
+            final bloc = context.read<TodoBloc>();
+            await TodoErrorDialog.show(context);
+            bloc.add(const TodoLoad());
           }
         },
+        // 失敗時は画面を切り替えず、直前の表示のままダイアログだけ出す
+        buildWhen: (previous, current) => current is! TodoFailure,
         builder: (context, state) {
           if (state is TodoLoading) {
             return const Center(child: CircularProgressIndicator());
-          }
-
-          if (state is TodoFailure) {
-            return _ErrorView(error: state.error);
           }
 
           if (state is TodoSuccess) {
@@ -75,53 +70,6 @@ class TodoHomePage extends StatelessWidget {
           context.push('/edit');
         },
         child: const Icon(Icons.add),
-      ),
-    );
-  }
-}
-
-// エラー時の表示（再読み込みボタン付き）
-class _ErrorView extends StatelessWidget {
-  const _ErrorView({required this.error});
-
-  final String error;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 32.0),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(Icons.error_outline, size: 56.0, color: colorScheme.error),
-            const SizedBox(height: 16.0),
-            Text(
-              AppTexts.errorTitle,
-              style: theme.textTheme.titleMedium?.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            const SizedBox(height: 8.0),
-            Text(
-              error,
-              textAlign: TextAlign.center,
-              style: theme.textTheme.bodySmall?.copyWith(
-                color: colorScheme.onSecondary,
-              ),
-            ),
-            const SizedBox(height: 24.0),
-            FilledButton.icon(
-              onPressed: () {
-                context.read<TodoBloc>().add(const TodoLoad());
-              },
-              icon: const Icon(Icons.refresh),
-              label: const Text(AppTexts.retry),
-            ),
-          ],
-        ),
       ),
     );
   }

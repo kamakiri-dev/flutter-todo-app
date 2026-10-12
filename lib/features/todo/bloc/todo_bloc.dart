@@ -12,6 +12,7 @@ class TodoBloc extends Bloc<TodoEvent, TodoState> {
   }
 
   final TodoRepository repository;
+  // 保存・削除していることが目で分かるよう、意図的にスピナーを1秒表示する
   static const _delayDuration = 1;
 
   Future<void> _onTodoLoad(TodoLoad event, Emitter<TodoState> emit) async {
@@ -64,12 +65,8 @@ class TodoBloc extends Bloc<TodoEvent, TodoState> {
   ) async {
     try {
       // 一覧がスピナーに切り替わってスクロール位置が戻らないよう、Loadingはemitしない
-      // DBでisCompletedを反転
-      final updatedTodo = event.todo.copyWith(
-        isCompleted: !event.todo.isCompleted,
-      );
-      // 変更したTodoをDBに保存
-      await repository.saveTodo(updatedTodo);
+      // 連打で古い値を基に反転しないよう、DB上の現在値を反転させる
+      await repository.toggleTodo(event.todo.id);
       final todos = await repository.getTodos();
       emit(TodoSuccess(todos));
     } catch (e) {
