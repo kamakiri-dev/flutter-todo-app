@@ -1,6 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:todo_app/features/todo/Bloc/todo_event.dart';
-import 'package:todo_app/features/todo/Bloc/todo_state.dart';
+import 'package:todo_app/features/todo/bloc/todo_event.dart';
+import 'package:todo_app/features/todo/bloc/todo_state.dart';
 
 class TodoBloc extends Bloc<TodoEvent, TodoState> {
   TodoBloc() : super(const TodoLoading()) {
