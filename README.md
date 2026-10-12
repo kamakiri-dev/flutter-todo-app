@@ -35,8 +35,13 @@ Web 版の SQLite に必要なファイル（`web/sqflite_sw.js`, `web/sqlite3.w
 
 ```bash
 dart run sqflite_common_ffi_web:setup
-flutter run -d chrome
+flutter run -d web-server --web-port 8080
 ```
+
+起動したら、いつも使っている Chrome で `http://localhost:8080` を開いてください。
+
+- データはブラウザの IndexedDB に保存されます。IndexedDB はポート番号ごとに分かれるため、ポートは固定してください
+- `flutter run -d chrome` は起動のたびに新しい一時プロファイルの Chrome を使うため、再起動するとデータが消えます（実機・エミュレーターでは消えません）
 
 ## よく使うコマンド
 
