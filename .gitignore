@@ -43,3 +43,14 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+# レビュー対象外（実コードと依存定義以外はコミットしない）
+/android/
+/ios/
+/linux/
+/macos/
+/windows/
+/web/
+/test/
+.metadata
+pubspec.lock
