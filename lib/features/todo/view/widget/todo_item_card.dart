@@ -1,21 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:todo_app/app/router/app_routes.dart';
 import 'package:todo_app/app/theme/app_colors.dart';
+import 'package:todo_app/app/theme/app_sizes.dart';
 import 'package:todo_app/common/formatter/date_formatter.dart';
 import 'package:todo_app/features/todo/bloc/todo_bloc.dart';
 import 'package:todo_app/features/todo/bloc/todo_event.dart';
 import 'package:todo_app/features/todo/model/todo_item.dart';
 import 'package:todo_app/features/todo/view/widget/todo_delete_dialog.dart';
 
-const double _cardRadius = 14.0;
+// タイトルとメモの間隔
 const double _titleMemoSpacing = 2.0;
-const double _textDateSpacing = 12.0;
+// 期限の前のカレンダーアイコン
+const double _dateIconSize = 14.0;
+// 表示する最大行数（超えたら … で省略）
+const int _titleMaxLines = 2;
+const int _memoMaxLines = 1;
 
 class TodoItemCard extends StatelessWidget {
-  final TodoItem todo;
-
   const TodoItemCard({super.key, required this.todo});
+
+  final TodoItem todo;
 
   // 期限が今日より前で未完了なら期限切れ
   bool get _isOverdue {
@@ -42,13 +48,19 @@ class TodoItemCard extends StatelessWidget {
     return Card(
       color: todo.isCompleted ? AppColors.cardCompleted : AppColors.card,
       child: InkWell(
-        borderRadius: BorderRadius.circular(_cardRadius),
+        // タップ時の波紋がカードの角からはみ出さないよう、カードと同じ角丸にする
+        borderRadius: BorderRadius.circular(AppSizes.radiusM),
         onTap: () {
-          context.push('/edit', extra: todo);
+          context.push(AppRoutes.edit, extra: todo);
         },
         onLongPress: () => _confirmDelete(context),
         child: Padding(
-          padding: const EdgeInsets.fromLTRB(4.0, 12.0, 16.0, 12.0),
+          padding: const EdgeInsets.fromLTRB(
+            AppSizes.spaceXs,
+            AppSizes.spaceM,
+            AppSizes.spaceL,
+            AppSizes.spaceM,
+          ),
           child: Row(
             children: [
               // チェックボックス
@@ -60,7 +72,7 @@ class TodoItemCard extends StatelessWidget {
                 },
               ),
 
-              const SizedBox(width: 4.0),
+              const SizedBox(width: AppSizes.spaceXs),
 
               // Todo情報
               Expanded(
@@ -69,7 +81,7 @@ class TodoItemCard extends StatelessWidget {
                   children: [
                     Text(
                       todo.title,
-                      maxLines: 2,
+                      maxLines: _titleMaxLines,
                       overflow: TextOverflow.ellipsis,
                       style: theme.textTheme.titleMedium?.copyWith(
                         fontWeight: FontWeight.bold,
@@ -87,7 +99,7 @@ class TodoItemCard extends StatelessWidget {
                       const SizedBox(height: _titleMemoSpacing),
                       Text(
                         todo.memo,
-                        maxLines: 1,
+                        maxLines: _memoMaxLines,
                         overflow: TextOverflow.ellipsis,
                         style: theme.textTheme.bodySmall?.copyWith(
                           color: colorScheme.onSecondary,
@@ -98,7 +110,7 @@ class TodoItemCard extends StatelessWidget {
                 ),
               ),
 
-              const SizedBox(width: _textDateSpacing),
+              const SizedBox(width: AppSizes.spaceM),
 
               // 期限（右寄せ）
               Row(
@@ -106,10 +118,10 @@ class TodoItemCard extends StatelessWidget {
                 children: [
                   Icon(
                     Icons.calendar_today_outlined,
-                    size: 14.0,
+                    size: _dateIconSize,
                     color: subColor,
                   ),
-                  const SizedBox(width: 4.0),
+                  const SizedBox(width: AppSizes.spaceXs),
                   Text(
                     DateFormatter.format(todo.date),
                     style: theme.textTheme.bodySmall?.copyWith(

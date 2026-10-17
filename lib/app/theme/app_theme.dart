@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:todo_app/app/theme/app_colors.dart';
-
-const double _radius = 14.0;
+import 'package:todo_app/app/theme/app_sizes.dart';
 
 class AppTheme {
   static ThemeData light = ThemeData(
@@ -37,7 +36,7 @@ class AppTheme {
       elevation: 0,
       margin: EdgeInsets.zero,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(_radius),
+        borderRadius: BorderRadius.circular(AppSizes.radiusM),
       ),
     ),
 
@@ -64,7 +63,7 @@ class AppTheme {
         foregroundColor: AppColors.onPrimary,
         padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 14.0),
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(_radius),
+          borderRadius: BorderRadius.circular(AppSizes.radiusM),
         ),
         textStyle: const TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
       ),
@@ -79,7 +78,7 @@ class AppTheme {
       fillColor: AppColors.surface,
       hintStyle: const TextStyle(color: AppColors.onSecondary),
       contentPadding: const EdgeInsets.symmetric(
-        horizontal: 16.0,
+        horizontal: AppSizes.spaceL,
         vertical: 14.0,
       ),
       border: _inputBorder(AppColors.outline),
@@ -91,20 +90,22 @@ class AppTheme {
 
     dialogTheme: DialogThemeData(
       backgroundColor: AppColors.surface,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(AppSizes.radiusXl),
+      ),
     ),
 
     snackBarTheme: SnackBarThemeData(
       behavior: SnackBarBehavior.floating,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(_radius),
+        borderRadius: BorderRadius.circular(AppSizes.radiusM),
       ),
     ),
   );
 
   static OutlineInputBorder _inputBorder(Color color, {double width = 1.0}) {
     return OutlineInputBorder(
-      borderRadius: BorderRadius.circular(_radius),
+      borderRadius: BorderRadius.circular(AppSizes.radiusM),
       borderSide: BorderSide(color: color, width: width),
     );
   }

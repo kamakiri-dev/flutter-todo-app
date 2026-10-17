@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:todo_app/app/theme/app_sizes.dart';
 import 'package:todo_app/common/constants/app_texts.dart';
 
 // 保存・削除・読み込みなどに失敗したときのエラーダイアログ
@@ -18,7 +19,11 @@ class TodoErrorDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
     return AlertDialog(
-      icon: Icon(Icons.error_outline, size: 32.0, color: colorScheme.error),
+      icon: Icon(
+        Icons.error_outline,
+        size: AppSizes.dialogIcon,
+        color: colorScheme.error,
+      ),
       title: const Text(AppTexts.errorTitle),
       content: const Text(AppTexts.errorMessage, textAlign: TextAlign.center),
       actions: [

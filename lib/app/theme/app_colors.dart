@@ -10,6 +10,8 @@ class AppColors {
   static const surface = Colors.white;
   static const onSurface = Colors.black;
   static const card = Color.fromRGBO(255, 224, 178, 1);
+  // primary を薄くした色（空表示のアイコン背景）
+  static const primaryLight = Color.fromRGBO(255, 171, 64, 0.2);
 
   // 画面背景（カードが映えるよう少しだけ暖色寄りの白）
   static const background = Color.fromRGBO(255, 248, 238, 1);

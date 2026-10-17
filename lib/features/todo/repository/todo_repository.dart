@@ -11,8 +11,8 @@ class TodoRepository {
   }
 
   Future<void> saveTodo(TodoItem todo) {
-    // idが0ならinsert、それ以外ならupdate
-    if (todo.id == 0) {
+    // 新規ならinsert、それ以外ならupdate
+    if (todo.isNew) {
       return localDataSource.insertTodo(todo);
     }
     return localDataSource.updateTodo(todo);
