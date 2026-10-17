@@ -41,13 +41,13 @@ class MyApp extends StatelessWidget {
         theme: AppTheme.light,
         debugShowCheckedModeBanner: false,
 
-        // 中華フォントを修正
+        // 日本語ロケールにして、漢字が中国語フォントで表示されないようにする
         localizationsDelegates: const [
           GlobalMaterialLocalizations.delegate,
           GlobalWidgetsLocalizations.delegate,
           GlobalCupertinoLocalizations.delegate,
         ],
-        supportedLocales: const [Locale("ja", "JP")],
+        supportedLocales: const [Locale('ja', 'JP')],
       ),
     );
   }

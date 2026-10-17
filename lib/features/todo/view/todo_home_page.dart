@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:todo_app/app/router/app_routes.dart';
+import 'package:todo_app/app/theme/app_sizes.dart';
 import 'package:todo_app/common/constants/app_texts.dart';
 import 'package:todo_app/features/todo/bloc/todo_bloc.dart';
 import 'package:todo_app/features/todo/bloc/todo_event.dart';
@@ -12,6 +14,8 @@ import 'package:todo_app/features/todo/view/widget/todo_summary_header.dart';
 
 // FAB にカードが隠れないよう、一覧の下に余白を取る
 const double _listBottomPadding = 96.0;
+// カード同士の間隔
+const double _listItemSpacing = 10.0;
 
 class TodoHomePage extends StatelessWidget {
   const TodoHomePage({super.key});
@@ -47,13 +51,14 @@ class TodoHomePage extends StatelessWidget {
                 Expanded(
                   child: ListView.separated(
                     padding: const EdgeInsets.fromLTRB(
-                      16.0,
-                      8.0,
-                      16.0,
+                      AppSizes.spaceL,
+                      AppSizes.spaceS,
+                      AppSizes.spaceL,
                       _listBottomPadding,
                     ),
                     itemCount: state.todos.length,
-                    separatorBuilder: (_, _) => const SizedBox(height: 10.0),
+                    separatorBuilder: (_, _) =>
+                        const SizedBox(height: _listItemSpacing),
                     itemBuilder: (context, index) {
                       return TodoItemCard(todo: state.todos[index]);
                     },
@@ -67,7 +72,7 @@ class TodoHomePage extends StatelessWidget {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          context.push('/edit');
+          context.push(AppRoutes.edit);
         },
         child: const Icon(Icons.add),
       ),

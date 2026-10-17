@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:todo_app/app/theme/app_sizes.dart';
 import 'package:todo_app/common/constants/app_texts.dart';
 import 'package:todo_app/features/todo/model/todo_item.dart';
 
@@ -21,7 +22,11 @@ class TodoDeleteDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
     return AlertDialog(
-      icon: Icon(Icons.delete_outline, size: 32.0, color: colorScheme.error),
+      icon: Icon(
+        Icons.delete_outline,
+        size: AppSizes.dialogIcon,
+        color: colorScheme.error,
+      ),
       title: const Text(AppTexts.deleteConfirmTitle),
       content: Text(
         AppTexts.deleteConfirmMessage(todo.title),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:todo_app/app/theme/app_sizes.dart';
 import 'package:todo_app/common/constants/app_texts.dart';
 import 'package:todo_app/common/formatter/date_formatter.dart';
 import 'package:todo_app/common/validator/todo_validator.dart';
@@ -8,7 +9,13 @@ import 'package:todo_app/features/todo/bloc/todo_bloc.dart';
 import 'package:todo_app/features/todo/bloc/todo_event.dart';
 import 'package:todo_app/features/todo/model/todo_item.dart';
 
-const double _padding = 16.0;
+// 期限として選べる年の範囲
+const int _firstSelectableYear = 2000;
+const int _lastSelectableYear = 2100;
+
+// メモ欄の高さ（行数）
+const int _memoMinLines = 2;
+const int _memoMaxLines = 4;
 
 class TodoEditPage extends StatelessWidget {
   const TodoEditPage({super.key, this.todo});
@@ -22,8 +29,8 @@ class TodoEditPage extends StatelessWidget {
     final pickedDate = await showDatePicker(
       context: context,
       initialDate: field.value ?? DateTime.now(),
-      firstDate: DateTime(2000),
-      lastDate: DateTime(2100),
+      firstDate: DateTime(_firstSelectableYear),
+      lastDate: DateTime(_lastSelectableYear),
     );
 
     if (pickedDate != null) {
@@ -34,7 +41,6 @@ class TodoEditPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
     final labelStyle = theme.textTheme.titleSmall?.copyWith(
       fontWeight: FontWeight.bold,
     );
@@ -61,11 +67,11 @@ class TodoEditPage extends StatelessWidget {
         title: Text(pageTitle),
       ),
       body: Padding(
-        padding: const EdgeInsets.all(_padding),
+        padding: const EdgeInsets.all(AppSizes.spaceL),
         child: Form(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-            spacing: _padding,
+            spacing: AppSizes.spaceL,
             children: [
               Text(AppTexts.todoTitle, style: labelStyle),
 
@@ -76,10 +82,7 @@ class TodoEditPage extends StatelessWidget {
                 onSaved: (value) {
                   inputTitle = value ?? '';
                 },
-                decoration: InputDecoration(
-                  hintText: AppTexts.titleHint,
-                  errorStyle: TextStyle(color: colorScheme.error),
-                ),
+                decoration: const InputDecoration(hintText: AppTexts.titleHint),
               ),
 
               Text(AppTexts.todoDate, style: labelStyle),
@@ -109,8 +112,8 @@ class TodoEditPage extends StatelessWidget {
                 onSaved: (value) {
                   inputMemo = value ?? '';
                 },
-                maxLines: 4,
-                minLines: 2,
+                maxLines: _memoMaxLines,
+                minLines: _memoMinLines,
                 decoration: const InputDecoration(hintText: AppTexts.memoHint),
               ),
 
@@ -135,7 +138,7 @@ class TodoEditPage extends StatelessWidget {
                               date: inputDate,
                             ) ??
                             TodoItem(
-                              id: 0,
+                              id: TodoItem.newId,
                               title: inputTitle,
                               memo: inputMemo,
                               date: inputDate,

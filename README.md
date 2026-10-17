@@ -4,18 +4,18 @@ Flutter 製のシンプルな Todo アプリです。Todo の作成・編集・�
 
 ## 機能
 
-- **一覧表示**: Todo をカードで一覧表示します。上部に「のこり◯件」「◯ / ◯ 完了」の進捗を表示します
-- **新規作成**: 右下の ＋ ボタンから、タイトル（必須）・期限・メモを入力して保存します
-- **編集**: カードをタップすると編集画面が開きます
-- **完了の切り替え**: カードのチェックボックスで完了 / 未完了を切り替えます
-- **削除**: カードを長押しすると、確認ダイアログを出してから削除します
-- **空表示・エラー表示**: Todo が 0 件のときは案内を、読み込みに失敗したときは再読み込みボタンを表示します
-- **永続化**: SQLite（`sqflite`）に保存するため、アプリを閉じてもデータが残ります
+* **一覧表示**: Todo をカードで一覧表示します。上部に「のこり◯件」「◯ / ◯ 完了」の進捗を表示します
+* **新規作成**: 右下の ＋ ボタンから、タイトル（必須）・期限・メモを入力して保存します
+* **編集**: カードをタップすると編集画面が開きます
+* **完了の切り替え**: カードのチェックボックスで完了 / 未完了を切り替えます
+* **削除**: カードを長押しすると、確認ダイアログを出してから削除します
+* **空表示・エラー表示**: Todo が 0 件のときは案内を表示します。保存・削除・読み込みなどに失敗したときはエラーダイアログを出し、閉じると一覧を読み込み直します
+* **永続化**: SQLite（`sqflite`）に保存するため、アプリを閉じてもデータが残ります
 
 ## 使用技術
 
 | 用途 | パッケージ |
-|---|---|
+|----|----|
 | 状態管理 | `flutter_bloc`（Bloc パターン） |
 | ルーティング | `go_router` |
 | 永続化 | `sqflite` / `sqflite_common_ffi_web`（Web 版） |
@@ -40,8 +40,8 @@ flutter run -d web-server --web-port 8080
 
 起動したら、いつも使っている Chrome で `http://localhost:8080` を開いてください。
 
-- データはブラウザの IndexedDB に保存されます。IndexedDB はポート番号ごとに分かれるため、ポートは固定してください
-- `flutter run -d chrome` は起動のたびに新しい一時プロファイルの Chrome を使うため、再起動するとデータが消えます（実機・エミュレーターでは消えません）
+* データはブラウザの IndexedDB に保存されます。IndexedDB はポート番号ごとに分かれるため、ポートは固定してください
+* `flutter run -d chrome` は起動のたびに新しい一時プロファイルの Chrome を使うため、再起動するとデータが消えます（実機・エミュレーターでは消えません）
 
 ## よく使うコマンド
 
@@ -57,9 +57,12 @@ flutter test             # テスト
 lib/
 ├── main.dart                         // エントリポイント。依存の組み立てと BlocProvider / MaterialApp.router
 ├── app/
-│   ├── router/app_router.dart        // ルーティング（'/' 一覧, '/edit' 作成・編集）
+│   ├── router/
+│   │   ├── app_router.dart           // ルーティング（'/' 一覧, '/edit' 作成・編集）
+│   │   └── app_routes.dart           // 画面のパス
 │   └── theme/
 │       ├── app_colors.dart           // 色定義
+│       ├── app_sizes.dart            // 余白・角丸などの共通サイズ
 │       └── app_theme.dart            // テーマ
 ├── common/
 │   ├── constants/app_texts.dart      // UI 文言
@@ -77,7 +80,7 @@ lib/
         └── view/
             ├── todo_home_page.dart   // 一覧画面
             ├── todo_edit_page.dart   // 作成・編集画面
-            └── widget/               // カード、空表示、進捗ヘッダー、削除ダイアログ
+            └── widget/               // カード、空表示、進捗ヘッダー、削除・エラーダイアログ
 ```
 
 ## アーキテクチャ
@@ -88,12 +91,14 @@ View ──add(Event)──> TodoBloc ──> TodoRepository ──> TodoLocalDa
   └── BlocBuilder <── emit(State)
 ```
 
-- 画面からは `TodoBloc` にイベント（`TodoLoad` / `TodoSaved` / `TodoDeleted` / `TodoToggled`）を送るだけで、DB には直接触りません
-- `TodoBloc` は操作のあとに一覧を取り直し、`TodoSuccess` / `TodoFailure` などの State を流します
-- `TodoItem.id == 0` を新規として扱い、保存時に insert / update を切り替えます
-- 依存は `main.dart` でコンストラクタ注入して組み立てています
+* 画面からは `TodoBloc` にイベント（`TodoLoad` / `TodoSaved` / `TodoDeleted` / `TodoToggled`）を送るだけで、DB には直接触りません
+* `TodoBloc` は操作のあとに一覧を取り直し、`TodoSuccess` / `TodoFailure` などの State を流します
+* `id` が `TodoItem.newId`（0）の Todo を新規として扱い（`TodoItem.isNew`）、保存時に insert / update を切り替えます
+* 依存は `main.dart` でコンストラクタ注入して組み立てています
 
 ## DB
 
-- DB 名 `todo.db`、テーブル `todos`
-- カラム: `id`（AUTOINCREMENT）, `title`, `memo`, `date`（ISO8601 文字列）, `is_completed`（0/1）
+* DB 名 `todo.db`、テーブル `todos`
+* カラム: `id`（AUTOINCREMENT）, `title`, `memo`, `date`（ISO8601 文字列）, `is_completed`（0/1）
+
+

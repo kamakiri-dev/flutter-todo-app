@@ -1,4 +1,7 @@
 class TodoItem {
+  // 未保存（新規）の Todo の id。保存時に DB が採番する
+  static const newId = 0;
+
   final int id;
   final String title;
   final String memo;
@@ -8,10 +11,12 @@ class TodoItem {
   const TodoItem({
     required this.id,
     required this.title,
-    this.memo = "",
+    this.memo = '',
     required this.date,
     this.isCompleted = false,
   });
+
+  bool get isNew => id == newId;
 
   TodoItem copyWith({
     int? id,

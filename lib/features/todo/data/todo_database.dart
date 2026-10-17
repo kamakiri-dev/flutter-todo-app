@@ -4,7 +4,14 @@ import 'package:sqflite/sqflite.dart';
 class TodoDatabase {
   static const _databaseName = 'todo.db';
   static const _databaseVersion = 1;
-  static const _tableName = 'todos';
+
+  // テーブル名・カラム名（DataSource / Mapper からも参照する）
+  static const tableName = 'todos';
+  static const columnId = 'id';
+  static const columnTitle = 'title';
+  static const columnMemo = 'memo';
+  static const columnDate = 'date';
+  static const columnIsCompleted = 'is_completed';
 
   Database? _database;
 
@@ -31,12 +38,12 @@ class TodoDatabase {
 
   Future<void> _createTable(Database db) async {
     await db.execute('''
-      CREATE TABLE $_tableName (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        title TEXT NOT NULL,
-        memo TEXT NOT NULL,
-        date TEXT NOT NULL,
-        is_completed INTEGER NOT NULL
+      CREATE TABLE $tableName (
+        $columnId INTEGER PRIMARY KEY AUTOINCREMENT,
+        $columnTitle TEXT NOT NULL,
+        $columnMemo TEXT NOT NULL,
+        $columnDate TEXT NOT NULL,
+        $columnIsCompleted INTEGER NOT NULL
       )
     ''');
   }

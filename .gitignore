@@ -54,3 +54,4 @@ app.*.map.json
 /test/
 .metadata
 pubspec.lock
+CLAUDE.local.md
